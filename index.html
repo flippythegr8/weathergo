@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WeatherGo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            color: #333;
+        }
+        .header {
+            background-color: #003366;
+            padding: 20px;
+            text-align: center;
+        }
+        .header h1 {
+            color: white;
+            margin: 0;
+        }
+        .nav {
+            margin-top: 15px;
+            text-align: center;
+        }
+        .nav a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: white;
+            font-size: 18px;
+        }
+        .banner {
+            text-align: center;
+            background-color: #ff8c00;
+            padding: 20px;
+            margin-top: 10px;
+            color: white;
+            font-size: 24px;
+        }
+        .container {
+            margin: 20px;
+        }
+        input[type="text"] {
+            padding: 10px;
+            width: 300px;
+            margin: 10px 0;
+            font-size: 16px;
+            border: 2px solid #003366;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #ff8c00;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #ff6f00;
+        }
+        #weatherDetails, #hourlyForecast {
+            margin-top: 20px;
+        }
+        #suggestions {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 300px;
+            max-height: 150px;
+            overflow-y: auto;
+            display: none;
+        }
+        .suggestion-item {
+            padding: 10px;
+            cursor: pointer;
+            background-color: white;
+        }
+        .suggestion-item:hover {
+            background-color: #f0f0f0;
+        }
+    }
+        .news-title {
+            font-size: 36px;
+            font-weight: bold;
+            color: #003366;
+            text-align: center;
+        }
+        .news-headline {
+            font-size: 28px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        .news-date {
+            font-size: 12px;
+            color: #777;
+            margin-bottom: 20px;
+        }
+        .news-image {
+            width: 100%;
+            max-width: 600px;
+            height: auto;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .news-content {
+            font-size: 18px;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>WeatherGo</h1>
+        <div class="nav">
+            <a href="index.html">Home</a>
+            <a href="forecast.html">Forecast</a>
+            <a href="news.html">Weather News</a>
+            <a href="#">About Us</a>
+        </div>
+    </div>
+
+    <div class="banner">
+        Accurate weather information at your fingertips!
+    </div>
+
+    <div class="container">
+        <h2>Get the Current Weather</h2>
+        <input type="text" id="locationInput" placeholder="Enter Location" oninput="suggestCities()" />
+        <div id="suggestions"></div>
+        <button onclick="getWeather()">Get Weather</button>
+
+        <div id="weatherDetails"></div>
+        <div id="hourlyForecast"></div>
+    </div>
+
+    <!-- Weather News Section -->
+    <div class="weather-news-section">
+        <div class="news-title">Weather News</div>
+        <div class="news-headline">Severe Thunderstorms Expected in the Midwest</div>
+        <div class="news-date">September 19, 2024</div>
+        <div class="news-content">
+
+Scattered severe thunderstorms are possible this afternoon and evening across central/eastern Minnesota, Iowa, and western Wisconsin. A slight risk is in effect, with chances of damaging winds, tornadoes, and large hail.
+            <a href="news.html" class="read-more">Read more</a>
+        </div>
+    </div>
+</div>
+
+    <footer>
+
+        &copy; 
+        2024 WeatherGo | All rights reserved.
+    </footer>
+
+    <script>
+        const apiKey = '16e9ad234c466a4818f5c407fa5434ff';
+
+        // Fetch city suggestions
+        function suggestCities() {
+    const location = document.getElementById('locationInput').value;
+    const suggestionsDiv = document.getElementById('suggestions');
+
+    if (location.length > 2) { // Trigger after 2 characters
+        const url = `http://api.openweathermap.org/geo/1.0/direct?q=${location}&limit=5&appid=${apiKey}`;
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                suggestionsDiv.innerHTML = ''; // Clear old suggestions
+                data.forEach(city => {
+                    const suggestionItem = document.createElement('div');
+                    suggestionItem.className = 'suggestion-item';
+                    
+                    // Show state if available
+                    const state = city.state ? `, ${city.state}` : '';
+                    suggestionItem.textContent = `${city.name}${state}, ${city.country}`;
+                    
+                    suggestionItem.onclick = () => {
+                        document.getElementById('locationInput').value = `${city.name}${state}, ${city.country}`;
+                        suggestionsDiv.style.display = 'none';
+                    };
+                    suggestionsDiv.appendChild(suggestionItem);
+                });
+                suggestionsDiv.style.display = 'block'; // Show suggestions
+            })
+            .catch(error => console.error('Error fetching city suggestions:', error));
+    } else {
+        suggestionsDiv.style.display = 'none'; // Hide suggestions if input is too short
+    }
+}
+
+        // Fetch current weather
+        function getWeather() {
+            const location = document.getElementById('locationInput').value;
+            fetchWeather(location);
+            getHourlyForecast(location);
+        }
+
+        function fetchWeather(location) {
+            const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${apiKey}`;
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    const country = data.sys.country;
+                    const units = country === 'US' ? 'imperial' : 'metric'; // Use Fahrenheit for US, Celsius for others
+                    fetchWeatherWithUnits(location, units);
+                });
+        }
+
+        function fetchWeatherWithUnits(location, units) {
+            const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${location}&units=${units}&appid=${apiKey}`;
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    displayWeather(data, units);
+                });
+        }
+
+        function displayWeather(data, units) {
+            const weatherDetails = document.getElementById('weatherDetails');
+            const temp = data.main.temp;
+            const description = data.weather[0].description;
+            const city = data.name;
+            const country = data.sys.country;
+            const temperatureUnit = units === 'imperial' ? '°F' : '°C';
+
+            weatherDetails.innerHTML = `
+                <h4>${city}, ${country}</h4>
+                <p>${Math.round(temp)}${temperatureUnit}</p>
+                <p>${description}</p>
+            `;
+        }
+
+        function getHourlyForecast(location) {
+            const apiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${location}&appid=${apiKey}`;
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    const country = data.city.country;
+                    const units = country === 'US' ? 'imperial' : 'metric'; // Use Fahrenheit for US, Celsius for others
+                    displayHourlyForecast(data, units);
+                });
+        }
+
+        function displayHourlyForecast(data, units) {
+            const hourlyForecast = document.getElementById('hourlyForecast');
+            hourlyForecast.innerHTML = ''; // Clear previous data
+
+            const temperatureUnit = units === 'imperial' ? '°F' : '°C';
+
+            data.list.slice(0, 6).forEach((hour) => {
+                let tempInKelvin = hour.main.temp;
+                let temp;
+
+                // Convert temperature based on units
+                if (units === 'imperial') {
+                    temp = (tempInKelvin - 273.15) * 9 / 5 + 32; // Kelvin to Fahrenheit
+                } else {
+                    temp = tempInKelvin - 273.15; // Kelvin to Celsius
+                }
+
+                const description = hour.weather[0].description;
+                const time = new Date(hour.dt_txt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+                hourlyForecast.innerHTML += `
+                    <div class="hour">
+                        <p>${time}: ${Math.round(temp)}${temperatureUnit} - ${description}</p>
+                    </div>
+                `;
+            });
+        }
+    </script>
+</body>
+</html>

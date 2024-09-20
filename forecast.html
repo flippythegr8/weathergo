@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WeatherGo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            color: #333;
+        }
+        .header {
+            background-color: #003366;
+            padding: 20px;
+            text-align: center;
+        }
+        .header h1 {
+            color: white;
+            margin: 0;
+        }
+        .nav {
+            margin-top: 15px;
+            text-align: center;
+        }
+        .nav a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: white;
+            font-size: 18px;
+        }
+        .banner {
+            text-align: center;
+            background-color: #ff8c00;
+            padding: 20px;
+            margin-top: 10px;
+            color: white;
+            font-size: 24px;
+        }
+        .container {
+            margin: 20px;
+        }
+        input[type="text"] {
+            padding: 10px;
+            width: 300px;
+            margin: 10px 0;
+            font-size: 16px;
+            border: 2px solid #003366;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #ff8c00;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #ff6f00;
+        }
+        #weatherDetails, #hourlyForecast {
+            margin-top: 20px;
+        }
+        .news-title {
+            font-size: 36px;
+            font-weight: bold;
+            color: #003366;
+            text-align: center;
+        }
+        .news-headline {
+            font-size: 28px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        .news-date {
+            font-size: 12px;
+            color: #777;
+            margin-bottom: 20px;
+        }
+        .news-image {
+            width: 100%;
+            max-width: 600px;
+            height: auto;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .news-content {
+            font-size: 18px;
+            line-height: 1.6;
+        }
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 10px;
+            background-color: #003366;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>WeatherGo</h1>
+        <div class="nav">
+            <a href="index.html">Home</a>
+            <a href="forecast.html">Forecast</a>
+            <a href="news.html">Weather News</a>
+            <a href="#">About Us</a>
+        </div>
+    </div>
+
+
+
+    <div class="container">
+        <h2>Enter a Location</h2>
+        <input type="text" id="forecastLocationInput" placeholder="Enter Location" />
+        <button onclick="getForecast()">Get Forecast</button>
+
+        <div id="forecastDetails"></div>
+    </div>
+
+    <script>
+        const apiKey = '16e9ad234c466a4818f5c407fa5434ff';
+
+        // Function to fetch the 7-day forecast
+        function getForecast() {
+            const location = document.getElementById('forecastLocationInput').value;
+            const apiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${location}&appid=${apiKey}`;
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    const country = data.city.country;
+                    const units = country === 'US' ? 'imperial' : 'metric'; // Use Fahrenheit for US, Celsius for others
+                    displayForecast(data, units);
+                });
+        }
+
+        // Function to display the 7-day forecast
+        function displayForecast(data, units) {
+            const forecastDetails = document.getElementById('forecastDetails');
+            forecastDetails.innerHTML = ''; // Clear previous data
+
+            const temperatureUnit = units === 'imperial' ? '°F' : '°C';
+            const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+            // Loop through the forecast data
+            for (let i = 0; i < data.list.length; i += 8) {  // OpenWeatherMap returns data in 3-hour intervals, so this increments by ~8 per day
+                const forecast = data.list[i];
+                const date = new Date(forecast.dt_txt);
+                const dayOfWeek = daysOfWeek[date.getUTCDay()];
+                const temp = forecast.main.temp;
+
+                // Convert Kelvin to correct units
+                let convertedTemp;
+                if (units === 'imperial') {
+                    convertedTemp = Math.round((temp - 273.15) * 9/5 + 32);  // Kelvin to Fahrenheit
+                } else {
+                    convertedTemp = Math.round(temp - 273.15);  // Kelvin to Celsius
+                }
+
+                const description = forecast.weather[0].description;
+
+                forecastDetails.innerHTML += `
+                    <div>
+                        <h4>${dayOfWeek}: ${convertedTemp}${temperatureUnit} - ${description}</h4>
+                    </div>
+                `;
+            }
+        }
+    </script>
+
+</body>
+</html>

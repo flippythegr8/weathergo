@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WeatherGo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            color: #333;
+        }
+        .header {
+            background-color: #003366;
+            padding: 20px;
+            text-align: center;
+        }
+        .header h1 {
+            color: white;
+            margin: 0;
+        }
+        .nav {
+            margin-top: 15px;
+            text-align: center;
+        }
+        .nav a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: white;
+            font-size: 18px;
+        }
+        .banner {
+            text-align: center;
+            background-color: #ff8c00;
+            padding: 20px;
+            margin-top: 10px;
+            color: white;
+            font-size: 24px;
+        }
+        .container {
+            margin: 20px;
+        }
+        input[type="text"] {
+            padding: 10px;
+            width: 300px;
+            margin: 10px 0;
+            font-size: 16px;
+            border: 2px solid #003366;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #ff8c00;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #ff6f00;
+        }
+        #weatherDetails, #hourlyForecast {
+            margin-top: 20px;
+        }
+        .news-title {
+            font-size: 36px;
+            font-weight: bold;
+            color: #003366;
+            text-align: center;
+        }
+        .news-headline {
+            font-size: 28px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        .news-date {
+            font-size: 12px;
+            color: #777;
+            margin-bottom: 20px;
+        }
+        .news-image {
+            width: 100%;
+            max-width: 600px;
+            height: auto;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .news-content {
+            font-size: 18px;
+            line-height: 1.6;
+        }
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 10px;
+            background-color: #003366;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>WeatherGo</h1>
+        <div class="nav">
+            <a href="index.html">Home</a>
+            <a href="forecast.html">Forecast</a>
+            <a href="#">Weather News</a>
+            <a href="#">About Us</a>
+        </div>
+    </div>
+
+    <!-- Weather News Section -->
+<div class="weather-news-section">
+    <div class="news-title">Weather News</div>
+
+    <!-- Main Headline -->
+    <div class="news-headline">Severe Thunderstorms Expected. SPC Issues slight risk</div>
+    <div class="news-date">September 19, 2024</div>
+
+    <!-- Content with side image layout -->
+    <div class="news-content-with-images">
+        <!-- First Image to the side -->
+        <img src="newsimages/nothing.png" alt="Severe Thunderstorm Outlook" class="side-news-image">
+
+        <!-- Main Content -->
+        <div class="news-content">
+            <p>
+                Scattered severe thunderstorms are possible this afternoon and
+                evening across central/eastern Minnesota, Iowa, and western
+                Wisconsin. A couple of tornadoes, large hail, and damaging winds may
+                occur across this region. Farther south, an area of locally severe
+                wind gusts and hail may also develop over parts of eastern Kansas,
+                southwest Missouri, and northeast Oklahoma.
+             
+            </p>
+
+            <p>
+                The Storm Prediction Center has issued an outlook indicating a slight risk of severe weather across the region.
+                Residents should remain vigilant and follow local advisories as conditions may rapidly change. 
+            </p>
+
+            <p>
+                Popular cities in this area include Kansas City, MO...Minneapolis, MN...St. Paul, MN...Des Moines, IA...Overland Park, KS.
+            </p>
+            
+        </p>
+        All credits to to the Storm Prediction Center for information.
+        </div>
+    </div>
+
+    <!-- Additional Images -->
+    <div class="additional-images">
+        <img src="newsimages/spcoutlook.jpg" alt="Outlook Map" class="news-image">
+        <img src="newsimages/stormclouds.jpg" alt="" class="news-image">
+    </div>
+</div>
+
+<style>
+    .weather-news-section {
+        margin-top: 40px;
+    }
+    .news-title {
+        font-size: 36px;
+        font-weight: bold;
+        color: #003366;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .news-headline {
+        font-size: 28px;
+        font-weight: bold;
+        margin-top: 20px;
+        text-align: center;
+    }
+    .news-date {
+        font-size: 12px;
+        color: #777;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .news-content-with-images {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 20px;
+    }
+    .news-content {
+        flex: 1;
+        font-size: 18px;
+        line-height: 1.6;
+        padding: 0 20px;
+    }
+    .side-news-image {
+        max-width: 200px;
+        margin-right: 20px;
+        border-radius: 10px;
+    }
+    .additional-images {
+        text-align: center;
+        margin-top: 20px;
+    }
+    .news-image {
+        width: 100%;
+        max-width: 400px;
+        height: auto;
+        border-radius: 10px;
+        margin: 10px;
+    }
+</style>
+
+
+<footer>
+    &copy; 2024 WeatherGo | All rights reserved.
+</footer>
